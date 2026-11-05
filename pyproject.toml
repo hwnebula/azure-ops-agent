@@ -1,0 +1,46 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "azure-ops-agent"
+version = "0.1.0"
+description = "Read-only Azure operations agent over Resource Graph, Activity Log, and Defender for Cloud."
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [{ name = "Harold Williams" }]
+dependencies = [
+  "azure-identity>=1.19",
+  "azure-mgmt-resourcegraph>=8.0",
+  "pydantic>=2.9",
+]
+
+[project.optional-dependencies]
+api = ["fastapi>=0.115", "uvicorn[standard]>=0.32"]
+dev = ["pytest>=8.3", "pytest-cov>=5.0", "ruff>=0.8", "mypy>=1.13"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/tools", "src/agent", "src/api", "src/mcp_server"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-m 'not integration'"
+markers = ["integration: calls live Azure APIs (needs az login and AZURE_SUBSCRIPTION_IDS)"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "S", "SIM"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101", "S105", "S106"]  # asserts; "skip_token" fixtures are not secrets
+
+[tool.mypy]
+python_version = "3.11"
+mypy_path = "src"
+explicit_package_bases = true
+strict = true
+ignore_missing_imports = true

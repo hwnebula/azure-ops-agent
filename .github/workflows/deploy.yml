@@ -1,0 +1,18 @@
+name: deploy
+
+# Terraform deploy using OIDC workload identity federation (no stored secrets).
+# TODO (weeks 3-4): terraform init/plan/apply for infra/envs/dev-wus2, then start the
+# in-VNet smoke-test job (ADR 0002).
+
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  placeholder:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Deploy pipeline not implemented yet."
